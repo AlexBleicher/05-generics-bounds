@@ -10,115 +10,136 @@ import java.util.Iterator;
  */
 public class SimpleListImpl<T> implements SimpleList<T> {
 
-	private ListElement<T> head;
-	private int size;
+    private ListElement<T> head;
+    private int size;
 
-	/**
-	 * Default constructor
-	 */
-	public SimpleListImpl() {
-		head = null;
-	}
+    /**
+     * Default constructor
+     */
+    public SimpleListImpl() {
+        head = null;
+    }
 
-	/**
-	 * Add an object to the end of the list
-	 *
-	 * @param item item to add
-	 */
-	@Override
-	public void add(T item) {
-		/* special case empty list */
-		if (head == null) {
-			head = new ListElement<>(item);
-		} else {
-			/* any other list length */
-			ListElement<T> current = head;
-			while (current.getNext() != null) {
-				current = current.getNext();
-			}
-			current.setNext(new ListElement<>(item));
-		}
-		size++;
-	}
+    /**
+     * Add an object to the end of the list
+     *
+     * @param item item to add
+     */
+    @Override
+    public void add(T item) {
+        /* special case empty list */
+        if (head == null) {
+            head = new ListElement<>(item);
+        } else {
+            /* any other list length */
+            ListElement<T> current = head;
+            while (current.getNext() != null) {
+                current = current.getNext();
+            }
+            current.setNext(new ListElement<>(item));
+        }
+        size++;
+    }
 
-	/**
-	 * @return size of the list
-	 */
-	@Override
-	public int size() {
-		return size;
-	}
+    /**
+     * @return size of the list
+     */
+    @Override
+    public int size() {
+        return size;
+    }
 
-	/**
-	 * Create a new iterator
-	 */
-	@Override
-	public Iterator<T> iterator() {
-		return new SimpleIterator();
-	}
+    /**
+     * Create a new iterator
+     */
+    @Override
+    public Iterator<T> iterator() {
+        return new SimpleIterator();
+    }
 
-	/**
-	 * Helper class which implements the Iterator<TE> interface
-	 * Has to be non static because otherwise it could not access the head of the list
-	 */
-	private class SimpleIterator implements Iterator<T> {
+    public void remove(T elementToRemove) {
+        if (head != null) {
+            if (head.item == elementToRemove) {
+                head = head.next;
+            } else {
+                ListElement<T> current = head;
+                boolean deleted = false;
+                while (current.next != null && !deleted) {
+                    if (current.next.item == elementToRemove) {
+                        current.next = current.next.next;
+                        deleted = true;
+                    } else {
+                        current = current.next;
+                    }
+                }
+            }
+        }
+    }
 
-		private ListElement<T> current = head;
+    /**
+     * Helper class which implements the Iterator<TE> interface
+     * Has to be non static because otherwise it could not access the head of the list
+     */
+    private class SimpleIterator implements Iterator<T> {
 
-		/**
-		 * @inheritDoc
-		 */
-		@Override
-		public boolean hasNext() {
-			return current != null;
-		}
+        private ListElement<T> current = head;
 
-		/**
-		 * @inheritDoc
-		 */
-		@Override
-		public T next() {
-			T tmp = current.getItem();
-			current = current.getNext();
-			return tmp;
-		}
-	}
+        /**
+         * @inheritDoc
+         */
+        @Override
+        public boolean hasNext() {
+            return current != null;
+        }
 
-	/**
-	 * Helper class for the linked list
-	 * can be static because the ListElement does not need to access the SimpleList instance
-	 */
-	private static class ListElement<T> {
-		private T item;
-		private ListElement<T> next;
+        /**
+         * @inheritDoc
+         */
+        @Override
+        public T next() {
+            T tmp = current.getItem();
+            current = current.getNext();
+            return tmp;
+        }
+    }
 
-		ListElement(T item) {
-			this.item = item;
-			this.next = null;
-		}
+    /**
+     * Helper class for the linked list
+     * can be static because the ListElement does not need to access the SimpleList instance
+     */
+    private static class ListElement<T> {
+        private T item;
+        private ListElement<T> next;
 
-		/**
-		 * @return get object in the element
-		 */
-		public T getItem() {
-			return item;
-		}
+        ListElement(T item) {
+            this.item = item;
+            this.next = null;
+        }
 
-		/**
-		 * @return successor of the ListElement - may be NULL
-		 */
-		public ListElement<T> getNext() {
-			return next;
-		}
+        /**
+         * @return get object in the element
+         */
+        public T getItem() {
+            return item;
+        }
 
-		/**
-		 * Sets the successor of the ListElement
-		 *
-		 * @param next ListElement
-		 */
-		public void setNext(ListElement<T> next) {
-			this.next = next;
-		}
-	}
+        /**
+         * @return successor of the ListElement - may be NULL
+         */
+        public ListElement<T> getNext() {
+            return next;
+        }
+
+        /**
+         * Sets the successor of the ListElement
+         *
+         * @param next ListElement
+         */
+        public void setNext(ListElement<T> next) {
+            this.next = next;
+        }
+
+
+    }
 
 }

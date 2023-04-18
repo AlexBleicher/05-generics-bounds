@@ -1,5 +1,7 @@
 package ohm.softa.a05.collections;
 
+import ohm.softa.a05.model.Plant;
+
 import java.util.function.Function;
 
 /**
@@ -66,7 +68,7 @@ public interface SimpleList<T> extends Iterable<T> {
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	default <R> SimpleList<R> map(Function<T, R> transform) {
+	default <R> SimpleList<R> map(Function<? super T,? extends R> transform) {
 		SimpleList<R> result;
 		try {
 			result = (SimpleList<R>) getClass().newInstance();
@@ -78,4 +80,5 @@ public interface SimpleList<T> extends Iterable<T> {
 		}
 		return result;
 	}
+	void remove(T elementToRemove);
 }
